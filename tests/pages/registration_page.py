@@ -1,4 +1,6 @@
 from selene import browser, have, command
+import os
+from tests.models.user import User
 
 
 class RegistrationPage:
@@ -61,4 +63,24 @@ class RegistrationPage:
 
     def submit(self):
         browser.element('#submit').click()
+        return self
+
+    def register(self, user: User):
+        self.fill_first_name(user.first_name) \
+            .fill_last_name(user.last_name) \
+            .fill_email(user.email) \
+            .select_gender(user.gender) \
+            .fill_mobile(user.mobile) \
+            .set_date_of_birth(user.birth_day, user.birth_month, user.birth_year) \
+            .fill_subjects(user.subjects) \
+            .select_hobby(user.hobby) \
+            .upload_picture(os.path.abspath(f'data/{user.picture}')) \
+            .fill_address(user.address) \
+            .select_state_and_city(user.state, user.city) \
+            .submit()
+        return self
+
+    def should_have_registered(self, expected_results: dict):
+        for field, value in expected_results.items():
+            browser.all('tr').element_by(have.text(field)).should(have.text(value))
         return self
