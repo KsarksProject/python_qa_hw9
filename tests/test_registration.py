@@ -20,7 +20,8 @@ def test_registration_form(browser_management):
         'city': 'Delhi'
     }
 
-    picture_path = os.path.abspath(f'../data/{test_data["picture"]}')
+    picture_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', test_data["picture"]))
+    assert os.path.exists(picture_path), f"Файл {picture_path} не найден!"
 
     registration_page = RegistrationPage()
     registration_page.open() \
