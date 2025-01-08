@@ -34,8 +34,12 @@ def test_registration_form(browser_management):
     }
 
     registration_page = RegistrationPage()
-    registration_page.open() \
-        .register(user)
 
-    # Проверка
+    # Открываем страницу регистрации
+    registration_page.open()
+
+    # Регистрируем пользователя
+    registration_page.register(user)
+
+    # Проверяем результат
     registration_page.should_have_registered(expected_results)

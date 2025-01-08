@@ -1,5 +1,5 @@
-from selene import browser, have, command
 import os
+from selene import browser, have, command
 from tests.models.user import User
 
 
@@ -43,10 +43,14 @@ class RegistrationPage:
         return self
 
     def select_hobby(self, hobby: str):
-        browser.all('.custom-checkbox label').element_by(have.text(hobby)).click()
+        browser.all('.custom-checkbox label') \
+            .element_by(have.text(hobby)) \
+            .perform(command.js.scroll_into_view) \
+            .click()
         return self
 
     def upload_picture(self, picture_path: str):
+        assert os.path.exists(picture_path), f"Файл {picture_path} не найден!"
         browser.element('#uploadPicture').send_keys(picture_path)
         return self
 
@@ -66,6 +70,9 @@ class RegistrationPage:
         return self
 
     def register(self, user: User):
+        picture_path = os.path.abspath(f'data/{user.picture}')
+        assert os.path.exists(picture_path), f"Файл {picture_path} не найден!"
+
         self.fill_first_name(user.first_name) \
             .fill_last_name(user.last_name) \
             .fill_email(user.email) \
@@ -74,7 +81,7 @@ class RegistrationPage:
             .set_date_of_birth(user.birth_day, user.birth_month, user.birth_year) \
             .fill_subjects(user.subjects) \
             .select_hobby(user.hobby) \
-            .upload_picture(os.path.abspath(f'data/{user.picture}')) \
+            .upload_picture(picture_path) \
             .fill_address(user.address) \
             .select_state_and_city(user.state, user.city) \
             .submit()
