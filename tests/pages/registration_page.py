@@ -29,6 +29,13 @@ class RegistrationPage:
         return self
 
     def set_date_of_birth(self, day: str, month: str, year: str):
+        browser.driver.execute_script("""
+                const iframe = document.querySelector('iframe[id^="google_ads_iframe"]');
+                if (iframe) {
+                    iframe.remove();
+                }
+            """)
+
         browser.element('#dateOfBirthInput').click()
         browser.element('.react-datepicker__year-select').click()
         browser.all('.react-datepicker__year-select option').element_by(have.text(year)).click()
