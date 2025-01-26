@@ -77,7 +77,9 @@ class RegistrationPage:
         return self
 
     def register(self, user: User):
-        picture_path = os.path.abspath(f'data/{user.picture}')
+        picture_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..', '..', 'data', user.picture)
+        )
         assert os.path.exists(picture_path), f"Файл {picture_path} не найден!"
 
         self.fill_first_name(user.first_name) \
